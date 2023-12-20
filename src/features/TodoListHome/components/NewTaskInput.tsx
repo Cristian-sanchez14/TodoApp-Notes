@@ -1,13 +1,14 @@
 import { View, TextInput, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState } from 'react';
-import { Task } from '../screens/TodoListHomeScreen';
+import  Task  from '../screens/TodoListHomeScreen';
+import { useTasks } from './TasksContextProvider';
 
-type NewTaskInput = {
-  onAdd: (newTask: Task) => void;
-};
+type NewTaskInput = {};
 
-const NewTaskInput = ({ onAdd }: NewTaskInput) => {
+const NewTaskInput = ({}: NewTaskInput) => {
+  const { addTask } = useTasks();
+
   const [newTask, setNewTask] = useState('');
   return (
     <View style={styles.taskContainer}>
@@ -25,7 +26,7 @@ const NewTaskInput = ({ onAdd }: NewTaskInput) => {
           if (!newTask) {
             return;
           }
-          onAdd({ title: newTask, isFinished: false });
+          addTask(newTask);
           setNewTask('');
         }}
       />

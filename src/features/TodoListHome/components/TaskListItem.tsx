@@ -1,17 +1,19 @@
 import { Text, StyleSheet, Pressable, Animated, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Task } from '../screens/TodoListHomeScreen';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { useTasks, type Task } from './TasksContextProvider';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 const RightActions = ({
   dragAnimatedValue,
-  onDelete,
+  task,
 }: {
   dragAnimatedValue: Animated.AnimatedInterpolation<string | number>;
-  onDelete: () => void;
+  task: Task;
 }) => {
+  const { deleteTask } = useTasks();
+
   const animatedStyles = {
     transform: [
       {
@@ -37,7 +39,7 @@ const RightActions = ({
       ]}
     >
       <MaterialCommunityIcons
-        onPress={onDelete}
+        onPress={() => deleteTask(task.id)}
         name="delete"
         size={20}
         color="white"
@@ -48,21 +50,20 @@ const RightActions = ({
 
 type TaskListItem = {
   task: Task;
-  onItemPressed: () => void;
-  onDelete: () => void;
 };
 
-const TaskListItem = ({ task, onItemPressed, onDelete }: TaskListItem) => {
+const TaskListItem = ({ task }: TaskListItem) => {
+  const { changeIsFinished } = useTasks();
   return (
     <Swipeable
       renderRightActions={(progressAnimatedValue, dragAnimatedValue) => (
-        <RightActions
-          dragAnimatedValue={dragAnimatedValue}
-          onDelete={onDelete}
-        />
+        <RightActions dragAnimatedValue={dragAnimatedValue} task={task} />
       )}
     >
-      <Pressable onPress={onItemPressed} style={styles.taskContainer}>
+      <Pressable
+        onPress={() => changeIsFinished(task.id)}
+        style={styles.taskContainer}
+      >
         <MaterialCommunityIcons
           name={
             task.isFinished
