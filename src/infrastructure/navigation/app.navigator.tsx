@@ -12,7 +12,7 @@ const SettingsScreen = () => <Text>Settings</Text>;
 export const AppNavigator = () => (
   <NavigationContainer>
     <Tab.Navigator>
-      <Tab.Screen name="TodoHome" component={TodoListNavigator} options={{ headerShown: false }}/>
+      <Tab.Screen name="Home" component={TodoListNavigator} options={{ headerShown: false }}/>
       <Tab.Screen name="Settings" component={SettingsScreen}/>
     </Tab.Navigator>
   </NavigationContainer>

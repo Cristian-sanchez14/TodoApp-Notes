@@ -8,15 +8,16 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import NewTaskInput from '../components/NewTaskInput';
 import TaskListItem from '../components/TaskListItem';
-
 import Reanimated, { CurvedTransition } from 'react-native-reanimated';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { SearchBar } from '@rneui/themed';
 
 import { SetStateAction, useState } from 'react';
-import { useTasks, type Task } from '../components/TasksContextProvider';
+
+import { useTasksStore } from '../components/TasksStore';
 
 type SearchBarComponentProps = {};
 
@@ -30,8 +31,12 @@ const TodoListHomeScreen: React.FunctionComponent<SearchBarComponentProps> = () 
 
   const headerHeight = useHeaderHeight();
 
-  const { getFilteredTasks, numberOfCompletedTasks, numberOfTasks } =
-    useTasks();
+  const numberOfCompletedTasks = useTasksStore((state) =>
+    state.numberOfCompletedTasks(0)
+  );
+  const numberOfTasks = useTasksStore((state) => state.numberOfTasks());
+
+  const getFilteredTasks = useTasksStore((state) => state.getFilteredTasks);
 
   const filteredTasks = getFilteredTasks(tab, searchQuery);
 
@@ -40,29 +45,28 @@ const TodoListHomeScreen: React.FunctionComponent<SearchBarComponentProps> = () 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.page}
     >
-
       <SafeAreaView
         edges={['bottom']}
         style={{ flex: 1, paddingTop: headerHeight + 35 }}
       >
         <View>
-        <SearchBar
-            platform="ios"
-            placeholder="Check To Do List...."
-            inputContainerStyle={{
-              borderRadius: 10,
-              padding: 0,
-            }}
-            inputStyle={{
-              borderRadius: 10,
-            }}
-            searchIcon= {{type: 'material-community', color: '#86939e', name: 'note-search', size: 30 }}
-            leftIconContainerStyle={{}}
-            placeholderTextColor="#888"
-            onChangeText={updateSearch}
-            value={searchQuery}
-          />
-        </View>
+          <SearchBar
+              platform="ios"
+              placeholder="Check To Do List...."
+              inputContainerStyle={{
+                borderRadius: 10,
+                padding: 0,
+              }}
+              inputStyle={{
+                borderRadius: 10,
+              }}
+              searchIcon= {{type: 'material-community', color: '#86939e', name: 'note-search', size: 30 }}
+              leftIconContainerStyle={{}}
+              placeholderTextColor="#888"
+              onChangeText={updateSearch}
+              value={searchQuery}
+            />
+          </View>
         <View
           style={{
             flexDirection: 'row',
@@ -74,6 +78,9 @@ const TodoListHomeScreen: React.FunctionComponent<SearchBarComponentProps> = () 
           <Button title="Todo" onPress={() => setTab('Todo')} />
           <Button title="Finished" onPress={() => setTab('Finished')} />
         </View>
+        <Text style={styles.completeTask}>
+            {numberOfCompletedTasks} / {numberOfTasks}
+        </Text>
         <FlatList
           data={filteredTasks}
           contentContainerStyle={{ gap: 5, padding: 10 }}
@@ -94,6 +101,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
   },
+  completeTask: {
+    padding: 15,
+    fontFamily: 'InterBold', 
+    color: 'dimgray',
+  }
 });
 
-export default TodoListHomeScreen;
+export default TodoListHomeScreen

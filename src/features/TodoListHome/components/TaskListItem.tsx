@@ -1,7 +1,8 @@
 import { Text, StyleSheet, Pressable, Animated, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { useTasks, type Task } from './TasksContextProvider';
+import { type Task } from './TasksContextProvider';
+import { useTasksStore } from './TasksStore';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -12,7 +13,7 @@ const RightActions = ({
   dragAnimatedValue: Animated.AnimatedInterpolation<string | number>;
   task: Task;
 }) => {
-  const { deleteTask } = useTasks();
+  const deleteTask = useTasksStore((state) => state.deleteTask);
 
   const animatedStyles = {
     transform: [
@@ -53,7 +54,7 @@ type TaskListItem = {
 };
 
 const TaskListItem = ({ task }: TaskListItem) => {
-  const { changeIsFinished } = useTasks();
+  const changeIsFinished = useTasksStore((state) => state.changeIsFinished);
   return (
     <Swipeable
       renderRightActions={(progressAnimatedValue, dragAnimatedValue) => (

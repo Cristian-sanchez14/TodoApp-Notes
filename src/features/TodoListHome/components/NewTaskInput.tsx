@@ -1,13 +1,12 @@
 import { View, TextInput, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState } from 'react';
-import  Task  from '../screens/TodoListHomeScreen';
-import { useTasks } from './TasksContextProvider';
+import { useTasksStore } from './TasksStore';
 
 type NewTaskInput = {};
 
 const NewTaskInput = ({}: NewTaskInput) => {
-  const { addTask } = useTasks();
+  const addTask = useTasksStore((state) => state.addTask);
 
   const [newTask, setNewTask] = useState('');
   return (

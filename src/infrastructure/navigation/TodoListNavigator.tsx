@@ -3,18 +3,18 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import TodoListHomeScreen from '../../features/TodoListHome/screens/TodoListHomeScreen';
-import TasksContextProvider from '../../features/TodoListHome/components/TasksContextProvider';
+// import TasksContextProvider from '../../features/TodoListHome/components/TasksContextProvider';
 
 const TodoListStack = createStackNavigator();
 
 
 const TodoListNavigator = () => {
   return (
-    <TasksContextProvider>
-      <TodoListStack.Navigator headerMode="none" initialRouteName="TodoHome">
+    <>
+      <TodoListStack.Navigator headerMode="none" >
         <TodoListStack.Screen name="TodoHome" component={TodoListHomeScreen} />
       </TodoListStack.Navigator>
-    </TasksContextProvider>
+    </>
   );
 };
 
